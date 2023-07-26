@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: web
+        image: harry2680/moviapi
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: myapp-config
+        - secretRef:
+            name: myapp-secrets
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: db
+        image: postgres:13
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secrets
+              key: DATABASE_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secrets
+              key: DATABASE_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secrets
+              key: DATABASE_NAME
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: DATABASE_HOST
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: DATABASE_PORT
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:6
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+        - name: config-volume
+          configMap:
+            name: nginx-config
+            items:
+            - key: nginx.conf
+              path: nginx.conf
+
