@@ -1,6 +1,6 @@
 # API-Moviebook
 Esta es una API construída con FASTAPI para realizar operaciones CRUD en un inventario de películas, se usa una base de datos de PostgreSQL para el almacenamiento de los datos de películas y se usa Redis para el almacenamiento en caché de los request para no realizar consultas nuevamente a la base de datos si esta no se ha modificado, además se usa para la validación del token de autenticación con JWT. Se usa por último en producción nginx para redirigir el tráfico de nivel 7 de la aplicación.
-Los usuarios podrían buscar, reservar, actualizar y eliminar películas. El almacenamiento se reliza en una base de datos de PostgreSQL y los detalles de las sesiones de los usuarios en Redis. 
+Los usuarios podrían buscar, reservar, actualizar y eliminar películas. 
 
 ## Getting-started
 Primero dedes asegurarte de crear un archivo `.env` el cual puede verse como el siguiente ejemplo:
