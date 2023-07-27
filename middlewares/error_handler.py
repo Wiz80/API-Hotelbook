@@ -1,7 +1,7 @@
-
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from typing import Union
 
 
 class ErrorHandler(BaseHTTPMiddleware):
@@ -9,7 +9,7 @@ class ErrorHandler(BaseHTTPMiddleware):
         super().__init__(app)
 
     # Método que será invocado para cada solicitud
-    async def dispatch(self, request: Request, call_next) -> Response | JSONResponse:
+    async def dispatch(self, request: Request, call_next) -> Union[Response, JSONResponse]:
         # Intenta procesar la solicitud
         try:
             return await call_next(request)

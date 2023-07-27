@@ -1,5 +1,10 @@
 import redis
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Redis connection
 def getRedisConnection():
-    return redis.Redis(host='localhost', port=6379, db=0)
+    return redis.Redis(host=os.getenv('REDIS_HOST'), port=os.getenv('REDIS_PORT'), db=0)

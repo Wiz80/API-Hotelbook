@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, Float
 class Movie(Base):
     __tablename__ = 'movies'  # Nombre de la tabla en la base de datos
     # Columna id, que es la clave primaria
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     # Columna title que almacenará los títulos de las películas como strings
     title = Column(String)
     # Columna overview que almacenará las descripciones de las películas como string
